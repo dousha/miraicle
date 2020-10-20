@@ -1,17 +1,5 @@
-FROM openjdk:11-slim
-ENV GRADLE_VERSION=6.6.1
+FROM gradle:6.7.0-jdk11 AS loader
 WORKDIR /app
-
-# Environment variable below are not for overridding
-ENV GRADLE_HOME=/opt/gradle/gradle-${GRADLE_VERSION}
-ENV PATH="${GRADLE_HOME}/bin:${PATH}"
-
-# Install build tools
-RUN apt update && apt --yes install git wget unzip
-## Get gradle
-RUN wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && unzip -d /opt/gradle gradle-*.zip
-## Verify install
-RUN gradle -v
 
 # Fetch and build mirai-console-loader
 RUN git clone https://github.com/iTXTech/mirai-console-loader.git
