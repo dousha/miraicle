@@ -38,7 +38,7 @@ to the host port, which is the common practice.
 
 ### What's inside?
 
-This images ships with the latest version of 
+This image ships with the latest version of 
 [`mirai-console-loader`](https://github.com/iTXTech/mirai-console-loader) 
 and [`mirai-api-http`](https://github.com/project-mirai/mirai-api-http) 
 with a default configuration file.
