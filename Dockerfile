@@ -18,7 +18,7 @@ WORKDIR /app
 RUN git clone https://github.com/project-mirai/mirai-api-http.git
 WORKDIR /app/mirai-api-http
 RUN ./gradlew shadow \
-	&& cp build/libs/mirai-console-loader*.jar ./mirai-api-http.jar
+	&& cp build/libs/*.jar ./mirai-api-http.jar
 # ^ XXX: let's hope there is only one artifact...
 
 # -- Stage 2: Shipment
