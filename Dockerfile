@@ -17,9 +17,9 @@ WORKDIR /app
 # Fetch and build mirai-api-http
 RUN git clone https://github.com/project-mirai/mirai-api-http.git
 WORKDIR /app/mirai-api-http
-RUN ./gradlew build \
-	&& cp build/libs/mirai-console-loader-$(cat build.gradle | grep -E "version\ '[^']+'" | awk '{ print $2 }' | sed "s#'##g").jar ./mirai-api-http.jar
-
+RUN ./gradlew shadow \
+	&& cp build/libs/mirai-console-loader*.jar ./mirai-api-http.jar
+# ^ XXX: let's hope there is only one artifact...
 
 # -- Stage 2: Shipment
 FROM openjdk:11-slim AS production
