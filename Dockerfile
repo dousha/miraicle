@@ -22,7 +22,8 @@ WORKDIR /app
 # ^ XXX: let's hope there is only one artifact...
 # Apparently we are encountering some issues
 # We will just fetch the artifact straight from project releases
-RUN curl -s https://api.github.com/repos/project-mirai/mirai-api-http/releases/latest | grep download_url | awk '{print $2}' | tr -d \" | wget -qi -O mirai-api-http.jar -
+COPY downloadHttpPlugin.sh .
+RUN chmod +x ./downloadHttpPlugin.sh && ./downloadHttpPlugin.sh
 
 # -- Stage 2: Shipment
 FROM openjdk:11-slim AS production
