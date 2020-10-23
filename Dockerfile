@@ -28,6 +28,8 @@ RUN chmod +x ./downloadHttpPlugin.sh && ./downloadHttpPlugin.sh
 # -- Stage 2: Shipment
 FROM openjdk:11-slim AS production
 WORKDIR /app
+ENV USER=123456654321
+ENV PASS=CHANGE_ME
 
 # Copy previously built mirai-console-loader
 COPY --from=loader /app/mirai-console-loader /app/mcl/
@@ -37,8 +39,10 @@ COPY --from=httpPlugin /app/mirai-api-http.jar /app/mcl/plugins/
 COPY httpApiSettings.yml /app/mcl/config/MiraiApiHttp/settings.yml
 # Expose ports
 EXPOSE 8080
-# I guess the app assumes the current working directory
+# The app and the scripts assume the current working directory
 WORKDIR /app/mcl
+COPY start.sh .
+RUN chmod +x start.sh
 # Run the thing
-ENTRYPOINT [ "./mcl" ]
+ENTRYPOINT [ "./start.sh" ]
 
