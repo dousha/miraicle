@@ -29,5 +29,5 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tage: dousha99/miraicle:latest
+        tags: dousha99/miraicle:latest
 

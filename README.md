@@ -102,6 +102,17 @@ the `trusted` zone.
 
 If you find fiddling with firewalls is not an option, you can at least 
 change the authentication key in the configuration files. 
+
+As for now, the `authKey` is possible to be changed by environment variables. 
+`AUTH_KEY` supplied in `-e` parameters can override it.
+
+```
+$ docker run -it dousha99/miraicle -p 8080:8080 -e USER=... -e PASS=... -e AUTH_KEY=...
+```
+
+However, if you feel like not exposing the secret in your command line or 
+configuration files, you can use the legacy methods listed below.
+
 To change the `authKey`. You can either map the configuration folder 
 `/app/mcl/config` out to host drives (which you may eventually have to do 
 since you need to install more plugins), or just open a shell and edit the 
