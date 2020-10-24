@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  mirai:
+    image: dousha99/miraicle
+	environment:
+	  AUTH_KEY: CHANGE_ME_PLEASE
+	  USER: '123456654321'
+	  PASS: 'MY_SUPER_SECRET_PASSWORD'
+	ports:
+	  - '8080:8080'
