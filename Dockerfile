@@ -15,15 +15,14 @@ FROM gradle:6.7.0-jdk11 AS httpPlugin
 WORKDIR /app
 
 # Fetch and build mirai-api-http
-#RUN git clone https://github.com/project-mirai/mirai-api-http.git
-#WORKDIR /app/mirai-api-http
-#RUN ./gradlew shadow \
-#	&& cp build/libs/*.jar ./mirai-api-http.jar
+RUN git clone https://github.com/project-mirai/mirai-api-http.git
+WORKDIR /app/mirai-api-http
+RUN ./gradlew shadow \
+	&& cp mirai-api-http/build/libs/*.jar /app/mirai-api-http.jar
 # ^ XXX: let's hope there is only one artifact...
-# Apparently we are encountering some issues
-# We will just fetch the artifact straight from project releases
-COPY downloadHttpPlugin.sh .
-RUN chmod +x ./downloadHttpPlugin.sh && ./downloadHttpPlugin.sh
+# Or just fetch the artifact straight from project releases
+#COPY downloadHttpPlugin.sh .
+#RUN chmod +x ./downloadHttpPlugin.sh && ./downloadHttpPlugin.sh
 
 # -- Stage 2: Shipment
 FROM openjdk:11-slim AS production
