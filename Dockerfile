@@ -15,19 +15,20 @@ FROM gradle:6.7.0-jdk11 AS httpPlugin
 WORKDIR /app
 
 # Fetch and build mirai-api-http
-#RUN git clone https://github.com/project-mirai/mirai-api-http.git
-#WORKDIR /app/mirai-api-http
-#RUN ./gradlew shadow \
-#	&& cp build/libs/*.jar ./mirai-api-http.jar
+RUN git clone https://github.com/project-mirai/mirai-api-http.git
+WORKDIR /app/mirai-api-http
+RUN ./gradlew shadow \
+	&& cp mirai-api-http/build/libs/*.jar /app/mirai-api-http.jar
 # ^ XXX: let's hope there is only one artifact...
-# Apparently we are encountering some issues
-# We will just fetch the artifact straight from project releases
-COPY downloadHttpPlugin.sh .
-RUN chmod +x ./downloadHttpPlugin.sh && ./downloadHttpPlugin.sh
+# Or just fetch the artifact straight from project releases
+#COPY downloadHttpPlugin.sh .
+#RUN chmod +x ./downloadHttpPlugin.sh && ./downloadHttpPlugin.sh
 
 # -- Stage 2: Shipment
 FROM openjdk:11-slim AS production
 WORKDIR /app
+ENV USER=123456654321
+ENV PASS=CHANGE_ME
 
 # Copy previously built mirai-console-loader
 COPY --from=loader /app/mirai-console-loader /app/mcl/
@@ -37,8 +38,10 @@ COPY --from=httpPlugin /app/mirai-api-http.jar /app/mcl/plugins/
 COPY httpApiSettings.yml /app/mcl/config/MiraiApiHttp/settings.yml
 # Expose ports
 EXPOSE 8080
-# I guess the app assumes the current working directory
+# The app and the scripts assume the current working directory
 WORKDIR /app/mcl
+COPY start.sh .
+RUN chmod +x start.sh
 # Run the thing
-ENTRYPOINT [ "./mcl" ]
+ENTRYPOINT [ "./start.sh" ]
 
