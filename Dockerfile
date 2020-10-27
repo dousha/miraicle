@@ -15,7 +15,9 @@ FROM gradle:6.7.0-jdk11 AS httpPlugin
 WORKDIR /app
 
 # Fetch and build mirai-api-http
-RUN git clone https://github.com/project-mirai/mirai-api-http.git
+#RUN git clone https://github.com/project-mirai/mirai-api-http.git
+# The upstream branch does not support the latest console version
+RUN git clone -b "1.0-rc-dev" https://github.com/Karlatemp/mirai-api-http.git
 WORKDIR /app/mirai-api-http
 RUN ./gradlew shadow \
 	&& cp mirai-api-http/build/libs/*.jar /app/mirai-api-http.jar
