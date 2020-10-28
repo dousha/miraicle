@@ -2,6 +2,12 @@ version: '3.8'
 services:
   mirai:
     image: dousha99/miraicle
+	volumes:
+	  - 'data:/app/mcl/data'
+	  - 'config:/app/mcl/config'
+	  - 'plugins:/app/mcl/plugins'
+	  - 'logs:/app/mcl/logs'
+	  - '/app/mcl/plugins/mirai-api-http.jar'
 	environment:
 	  AUTH_KEY: CHANGE_ME_PLEASE
 	  USER: '123456654321'

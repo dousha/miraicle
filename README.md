@@ -9,23 +9,71 @@ I guess I'll just be the one who's in the barrel.
 
 **Manual assemblies required**, see later sections.
 
-Quick and dirty start:
+Pull the image:
 
 ```
-$ docker run -it dousha99/miraicle -p 8080:8080 -e USER=1234567890 -e PASS=p455w0rd!
+$ docker pull dousha99/miraicle
+```
+
+Running the image (after mouting the volumes):
+
+```
+$ docker run -it dousha99/miraicle -v ... -v ... -v ...
+- or with docker-compose -
+$ docker-compose up -d && docker attach mirai
 ```
 
 This opens a interactive console provided by `mirai-console-loader`. 
 Then you can use it just as a normal, pre-configured `mirai` bot. 
-The account specified with `USER` and `PASS` should login automatically.
 
-Future versions may introduce a method to configure all those 
-things with environment variables, making the use of `docker-compose.yml` 
-or `kubectl apply -f deployment.yaml` possible. 
+Configurations are supplied through the mounted volumes and passing them 
+as environment variables will no longer works. See below for details.
 
 ## Manual Assemblies
 
-### Device Mock Data
+### 1. Mounting the Volumes
+
+If you are using `docker-compose`, then this step is already done for you. 
+You can skip to the next section.
+
+There are at least 3 volumes you will need to mount to a persistent 
+storage (like host drive or docker volumes). 
+If you need to install more plugins, an additional volume will also be 
+mounted. There are a total of 5 volumes containing persistent data.
+These are:
+
+* `/app/mcl/config` - Configurations
+* `/app/mcl/data` - Application data
+* `/app/mcl/libs` - Runtime library
+* `/app/mcl/plugins` - Plugins
+* `/app/mcl/logs` - Logs
+
+All of these volumes will be created by the application except for `plugins` 
+which contains a pre-built artifact: `/app/mcl/plugins/mirai-api-http.jar`. 
+You can create an anonymous volume to protect this artifact from being 
+obscured by bind mounts, or download your own copy of `mirai-api-http.jar` 
+and put it into the host `plugins` directory.
+
+You may find that some of the files that should be in `/app/mcl/` was also 
+in `/app/mcl/config/`, this is a workaround to the quirks of mounting a 
+single file in docker -- it basically doesn't work reliably and always fail 
+silently, making debugging things even harder. So symbol links were created 
+to map these critical configurtaions into a folder which could be reliably 
+bind-mounted. It is **strongly recommeded** to prepare these bind-mounted 
+volumes before the first start of the contianer, even if mouting with empty 
+directories would bring the benefit of not hassle with container content.
+
+However, it is NOT recommended to edit these bind volumes wile the 
+application is running. None of these applications support hot reloading.
+
+### 2. (Optional) Passing Boot Parameters
+
+It is possible to pass parameters to `./mcl` script. The default parameter is 
+`-u` which prevent the loader from automatically upgrading runtime libraries. 
+Passing new arguments to `docker run` will override the default arguments, 
+thus allowing users to customize with the loader script.
+
+### 3. Device Mock Data
 
 For an ideal IM service, there shall be an offical way to create bots. 
 QQ is clearly not ideal. I could understand it's a complex decision, but 
@@ -36,10 +84,13 @@ Device mock data is used to ... well, mock a login device. Since we are
 using Mobile QQ protocol, mocking a device became a necessity. Otherwise 
 the account could be easily banned. Mirai does have the ability to 
 generate mock data, but you have to authenticate this device on the server 
-since it's considered a 'unfamiliar device'.
+since it's considered a 'new device'.
 
-It is highly advised that one shall download `mirai-console-loader` and 
-initiate authentication process to obtain a `device.json` for the account. 
+Though the authentication process could be done within CLI (with help 
+from another device with GUI), it is highly advised that one shall download 
+`mirai-console-loader` and initiate authentication process to obtain a 
+`device.json` for the account. 
+
 Sharing the same `device.json` may lead to unexpected results including 
 the needing to re-authenticate, cannot login even permanently banned.
 
@@ -67,17 +118,14 @@ $ ./mcl
 -- It would prompt you to authenticate the device
 -- After the process, type the command below to close the app:
 
-/shutdown
+/shutdown (or /stop in later versions. If none of these works, 
+press Ctrl + C).
 
 -- The device.json will appear in the CWD
 ```
 
-After obtaining your `device.json`, you can map it 
-into the container:
-
-```
-$ docker run ... -v device.json:/app/mcl/device.json ...
-```
+After obtaining your `device.json`, you can use it to replace 
+`config/device.json`.
 
 Note that this does **NOT** create a universal device data. 
 New accounts logging in with this device data for the first time 
@@ -87,7 +135,7 @@ It is highly advised to create separate containers with different
 `device.json` for multiple account, even if they share the same 
 code base.
 
-### HTTP Plugin Configurations
+### 4. HTTP Plugin Configurations
 
 This image is **INSECURE** by default since it uses a shared authentication 
 key for the HTTP plugin. This means for anyone who can access your container, 
@@ -126,6 +174,17 @@ $ docker exec -it <CONTAINER_ID> bash
 
 ## FAQ
 
+### Why doesn't it work???
+
+It's a miracle to have `mirai-*` running on the first place since the 
+project itself is extremely volatile and always introducing breaking changes 
+in **every single component almost everyday**, packing a image that works 
+is even harder. (Hence the name `miraicle`.)
+
+I apologize for all the inconvenince. Since I am not working fulltime on 
+this, bug fixes may come late. I will try my best to track all the fatal 
+issues and resolve them ASAP.
+
 ### What's inside?
 
 This image ships with the latest version of 
@@ -155,6 +214,23 @@ they are using the bleeding edge version of Kotlin which I don't have a
 firm grasp on. I may make questionable, even completely wrong assumptions 
 about the code, leading to a failure. But hey, isn't that what open-source 
 is meanted to fix?
+
+### My account got banned for using this?
+
+This is unfortunate. But I'm afraid I can't help you with that since the 
+EULA of QQ explicitly specified that using a third-party client is not 
+accepted and may lead to the termination of service. Permabanning is 
+annoying, but we can do literally nothing about it.
+
+And please recheck all the plugins you have installed. There might be 
+some malicious plugins that will abuse your account to spam, which would 
+lead to banning. Sending messages too frequently will also trigger the 
+abuse alarm.
+
+The content of the image is always inspectable from `Dockerfile` and I 
+will audit the plugins added into the image. If you suspect that some 
+of these plugins (which is the HTTP plugin by now) is abusive or malicious, 
+please report it in the issues.
 
 ### I hate containers. Can't you just pack everything up without shoving it into a container?
 

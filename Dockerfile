@@ -38,6 +38,12 @@ COPY --from=loader /app/mirai-console-loader /app/mcl/
 COPY --from=httpPlugin /app/mirai-api-http.jar /app/mcl/plugins/
 # Copy configuration file
 COPY httpApiSettings.yml /app/mcl/config/MiraiApiHttp/setting.yml
+# Copy package.json-like config.json
+COPY config.json /app/mcl/config/config.json
+# Create softlinks
+RUN touch /app/mcl/config/device.json \
+	&& ln -s /app/mcl/config/device.json /app/mcl/device.json
+	&& ln -s /app/mcl/config/config.json /app/mcl/config.json
 # Expose ports
 EXPOSE 8080
 # The app and the scripts assume the current working directory
@@ -46,4 +52,5 @@ COPY start.sh .
 RUN chmod +x start.sh
 # Run the thing
 ENTRYPOINT [ "./start.sh" ]
+CMD [ "-u" ]
 
