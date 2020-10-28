@@ -37,7 +37,7 @@ COPY --from=loader /app/mirai-console-loader /app/mcl/
 # Copy previously built mirai-api-http
 COPY --from=httpPlugin /app/mirai-api-http.jar /app/mcl/plugins/
 # Copy configuration file
-COPY httpApiSettings.yml /app/mcl/config/MiraiApiHttp/settings.yml
+COPY httpApiSettings.yml /app/mcl/config/MiraiApiHttp/setting.yml
 # Expose ports
 EXPOSE 8080
 # The app and the scripts assume the current working directory
