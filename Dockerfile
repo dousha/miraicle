@@ -42,7 +42,7 @@ COPY httpApiSettings.yml /app/mcl/config/MiraiApiHttp/setting.yml
 COPY config.json /app/mcl/config/config.json
 # Create softlinks
 RUN touch /app/mcl/config/device.json \
-	&& ln -s /app/mcl/config/device.json /app/mcl/device.json
+	&& ln -s /app/mcl/config/device.json /app/mcl/device.json \
 	&& ln -s /app/mcl/config/config.json /app/mcl/config.json
 # Expose ports
 EXPOSE 8080
