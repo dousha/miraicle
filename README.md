@@ -9,17 +9,9 @@ I guess I'll just be the one who's in the barrel.
 
 **Manual assemblies required**, see later sections.
 
-Pull the image:
+With `docker-compose`
 
 ```
-$ docker pull dousha99/miraicle
-```
-
-Running the image (after mouting the volumes):
-
-```
-$ docker run -it dousha99/miraicle -v ... -v ... -v ...
-- or with docker-compose -
 $ docker-compose up -d && docker attach mirai
 ```
 
