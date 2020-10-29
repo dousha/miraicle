@@ -27,15 +27,15 @@ RUN ./gradlew shadow \
 # -- Stage 2: Shipment
 FROM openjdk:11-slim AS production
 WORKDIR /app
-ENV USER=123456654321
-ENV PASS=CHANGE_ME
 
 # Copy previously built mirai-console-loader
 COPY --from=loader /app/mirai-console-loader /app/mcl/
 # Copy previously built mirai-api-http
 COPY --from=httpPlugin /app/mirai-api-http.jar /app/mcl/plugins/
 # Copy configuration file
-COPY httpApiSettings.yml /app/mcl/config/MiraiApiHttp/settings.yml
+COPY httpApiSettings.yml /app/mcl/config/MiraiApiHttp/setting.yml
+# Copy package.json-like config.json
+COPY config.json /app/mcl/config.json
 # Expose ports
 EXPOSE 8080
 # The app and the scripts assume the current working directory
@@ -44,4 +44,5 @@ COPY start.sh .
 RUN chmod +x start.sh
 # Run the thing
 ENTRYPOINT [ "./start.sh" ]
+CMD [ "-u" ]
 

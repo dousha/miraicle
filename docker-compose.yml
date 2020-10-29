@@ -1,10 +1,20 @@
 version: '3.8'
 services:
   mirai:
+    container_name: mirai
     image: dousha99/miraicle
-	environment:
-	  AUTH_KEY: CHANGE_ME_PLEASE
-	  USER: '123456654321'
-	  PASS: 'MY_SUPER_SECRET_PASSWORD'
-	ports:
-	  - '8080:8080'
+    volumes:
+      - 'mcl:/app/mcl/'
+    ports:
+      - '8080:8080'
+    stdin_open: true
+    tty: true
+
+volumes:
+  mcl:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./mcl
+
