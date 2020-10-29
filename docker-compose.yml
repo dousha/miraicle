@@ -1,16 +1,46 @@
 version: '3.8'
 services:
   mirai:
+    container_name: mirai
     image: dousha99/miraicle
     volumes:
       - 'data:/app/mcl/data'
       - 'config:/app/mcl/config'
       - 'plugins:/app/mcl/plugins'
       - 'logs:/app/mcl/logs'
-      - '/app/mcl/plugins/mirai-api-http.jar'
-    environment:
-      AUTH_KEY: CHANGE_ME_PLEASE
-      USER: '123456654321'
-      PASS: 'MY_SUPER_SECRET_PASSWORD'
+      - 'libs:/app/mcl/libs'
     ports:
       - '8080:8080'
+
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data
+  config:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./config
+  plugins:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./plugins
+  libs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./libs
+  logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./logs
+

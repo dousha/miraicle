@@ -22,10 +22,8 @@
       "type": "libs"
     }
   ],
-  "disabled_scripts": [
-    "updater"
-  ],
   "proxy": "",
   "log_level": 0,
   "script_props": {}
 }
+
