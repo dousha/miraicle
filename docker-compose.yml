@@ -4,43 +4,17 @@ services:
     container_name: mirai
     image: dousha99/miraicle
     volumes:
-      - 'data:/app/mcl/data'
-      - 'config:/app/mcl/config'
-      - 'plugins:/app/mcl/plugins'
-      - 'logs:/app/mcl/logs'
-      - 'libs:/app/mcl/libs'
+      - 'mcl:/app/mcl/'
     ports:
       - '8080:8080'
+    stdin_open: true
+    tty: true
 
 volumes:
-  data:
+  mcl:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: ./data
-  config:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./config
-  plugins:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./plugins
-  libs:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./libs
-  logs:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./logs
+      device: ./mcl
 

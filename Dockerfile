@@ -15,9 +15,7 @@ FROM gradle:6.7.0-jdk11 AS httpPlugin
 WORKDIR /app
 
 # Fetch and build mirai-api-http
-#RUN git clone https://github.com/project-mirai/mirai-api-http.git
-# The upstream branch does not support the latest console version
-RUN git clone -b "1.0-rc-dev" https://github.com/Karlatemp/mirai-api-http.git
+RUN git clone https://github.com/project-mirai/mirai-api-http.git
 WORKDIR /app/mirai-api-http
 RUN ./gradlew shadow \
 	&& cp mirai-api-http/build/libs/*.jar /app/mirai-api-http.jar
@@ -29,8 +27,6 @@ RUN ./gradlew shadow \
 # -- Stage 2: Shipment
 FROM openjdk:11-slim AS production
 WORKDIR /app
-ENV USER=123456654321
-ENV PASS=CHANGE_ME
 
 # Copy previously built mirai-console-loader
 COPY --from=loader /app/mirai-console-loader /app/mcl/
@@ -39,11 +35,7 @@ COPY --from=httpPlugin /app/mirai-api-http.jar /app/mcl/plugins/
 # Copy configuration file
 COPY httpApiSettings.yml /app/mcl/config/MiraiApiHttp/setting.yml
 # Copy package.json-like config.json
-COPY config.json /app/mcl/config/config.json
-# Create softlinks
-RUN touch /app/mcl/config/device.json \
-	&& ln -s /app/mcl/config/device.json /app/mcl/device.json \
-	&& ln -s /app/mcl/config/config.json /app/mcl/config.json
+COPY config.json /app/mcl/config.json
 # Expose ports
 EXPOSE 8080
 # The app and the scripts assume the current working directory
