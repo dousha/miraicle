@@ -28,35 +28,25 @@ as environment variables will no longer works. See below for details.
 If you are using `docker-compose`, then this step is already done for you. 
 You can skip to the next section.
 
-There are at least 3 volumes you will need to mount to a persistent 
-storage (like host drive or docker volumes). 
-If you need to install more plugins, an additional volume will also be 
-mounted. There are a total of 5 volumes containing persistent data.
-These are:
+You will need to create a volume that is used to store all the goodies of 
+`mirai-*`. If you need to view or edit them on the host, use this command: 
 
-* `/app/mcl/config` - Configurations
-* `/app/mcl/data` - Application data
-* `/app/mcl/libs` - Runtime library
-* `/app/mcl/plugins` - Plugins
-* `/app/mcl/logs` - Logs
+```
+docker volume create -d local -o type=none,o=bind,device=./mcl mcl
+```
 
-All of these volumes will be created by the application except for `plugins` 
-which contains a pre-built artifact: `/app/mcl/plugins/mirai-api-http.jar`. 
-You can create an anonymous volume to protect this artifact from being 
-obscured by bind mounts, or download your own copy of `mirai-api-http.jar` 
-and put it into the host `plugins` directory.
-
-You may find that some of the files that should be in `/app/mcl/` was also 
-in `/app/mcl/config/`, this is a workaround to the quirks of mounting a 
-single file in docker -- it basically doesn't work reliably and always fail 
-silently, making debugging things even harder. So symbol links were created 
-to map these critical configurtaions into a folder which could be reliably 
-bind-mounted. It is **strongly recommeded** to prepare these bind-mounted 
-volumes before the first start of the contianer, even if mouting with empty 
-directories would bring the benefit of not hassle with container content.
+This will create a Docker volume binded to `./mcl`. The directory will be 
+populated with the content of the image on the first run, and after that 
+you can modify the content and it will reflect into the container.
 
 However, it is NOT recommended to edit these bind volumes wile the 
 application is running. None of these applications support hot reloading.
+
+To bind this volume into the image when running, use this command:
+
+```
+docker run -v mcl:/app/mcl dousha99/miraicle
+```
 
 ### 2. (Optional) Passing Boot Parameters
 
