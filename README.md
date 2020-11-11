@@ -1,5 +1,7 @@
 # `miraicle` - Docker image for `mirai-console-loader`
 
+[简体中文](README.zh.md) | English
+
 ## Motivation
 
 Someone has to pack these stuff together eventually. 
@@ -32,7 +34,7 @@ You will need to create a volume that is used to store all the goodies of
 `mirai-*`. If you need to view or edit them on the host, use this command: 
 
 ```
-docker volume create -d local -o type=none,o=bind,device=./mcl mcl
+$ docker volume create -d local -o type=none,o=bind,device=./mcl mcl
 ```
 
 This will create a Docker volume binded to `./mcl`. The directory will be 
@@ -45,7 +47,7 @@ application is running. None of these applications support hot reloading.
 To bind this volume into the image when running, use this command:
 
 ```
-docker run -v mcl:/app/mcl dousha99/miraicle
+$ docker run -v mcl:/app/mcl dousha99/miraicle
 ```
 
 ### 2. (Optional) Passing Boot Parameters
@@ -133,27 +135,6 @@ the `trusted` zone.
 If you find fiddling with firewalls is not an option, you can at least 
 change the authentication key in the configuration files. 
 
-As for now, the `authKey` is possible to be changed by environment variables. 
-`AUTH_KEY` supplied in `-e` parameters can override it.
-
-```
-$ docker run -it dousha99/miraicle -p 8080:8080 -e USER=... -e PASS=... -e AUTH_KEY=...
-```
-
-However, if you feel like not exposing the secret in your command line or 
-configuration files, you can use the legacy methods listed below.
-
-To change the `authKey`. You can either map the configuration folder 
-`/app/mcl/config` out to host drives (which you may eventually have to do 
-since you need to install more plugins), or just open a shell and edit the 
-file in place.
-
-```
-$ docker run -it dousha99/miraicle -v config:/app/mcl/config -p 8080:8080 -e USER=... -e PASS=...
-- or -
-$ docker exec -it <CONTAINER_ID> bash
-```
-
 ## FAQ
 
 ### Why doesn't it work???
@@ -163,27 +144,17 @@ project itself is extremely volatile and always introducing breaking changes
 in **every single component almost everyday**, packing a image that works 
 is even harder. (Hence the name `miraicle`.)
 
-I apologize for all the inconvenince. Since I am not working fulltime on 
+I apologize for all the inconvenience. Since I am not working fulltime on 
 this, bug fixes may come late. I will try my best to track all the fatal 
 issues and resolve them ASAP.
 
-### What's inside?
+Check out the issues section for updates. Usually the `bleeding` tag would 
+contain the latest code and fixes and the `latest` tag would contain the 
+most recent stable build of `bleeding`. If the `latest` tag is broken, you 
+can try `bleeding` for luck.
 
-This image ships with the latest version of 
-[`mirai-console-loader`](https://github.com/iTXTech/mirai-console-loader) 
-and [`mirai-api-http`](https://github.com/project-mirai/mirai-api-http) 
-with a default configuration file.
-
-The image still needs some manual assemblies. Specifically 
-the `/app/mcl/device.json` used to mock a device is not provided and have 
-to be generated on the first login. In addition, the first login of an 
-account usually would trigger a 2FA process that need a GUI to continue.
-
-### It doesn't work / There is an issue with this image ...
-
-Please report bugs to respective application developers. 
-This repository only accepts issues on image packaging, 
-which is not very likely to fail.
+Usually the issues are caused by the changes made by upstream projects. 
+In that case the issue could be forwarded to respective developers. 
 
 However, if you found that the issue is caused by the packaging process, 
 feel free to open an issue or make a pull request! Mirai is quite a 
@@ -196,6 +167,18 @@ they are using the bleeding edge version of Kotlin which I don't have a
 firm grasp on. I may make questionable, even completely wrong assumptions 
 about the code, leading to a failure. But hey, isn't that what open-source 
 is meanted to fix?
+
+### What's inside?
+
+This image ships with the latest version of 
+[`mirai-console-loader`](https://github.com/iTXTech/mirai-console-loader) 
+and [`mirai-api-http`](https://github.com/project-mirai/mirai-api-http) 
+with a default configuration file.
+
+The image still needs some manual assemblies. Specifically 
+the `/app/mcl/device.json` used to mock a device is not provided and have 
+to be generated on the first login. In addition, the first login of an 
+account usually would trigger a 2FA process that need a GUI to continue.
 
 ### My account got banned for using this?
 
