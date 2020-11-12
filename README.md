@@ -34,8 +34,11 @@ You will need to create a volume that is used to store all the goodies of
 `mirai-*`. If you need to view or edit them on the host, use this command: 
 
 ```
-$ docker volume create -d local -o type=none,o=bind,device=./mcl mcl
+docker volume create -d local -o type=none -o o=bind -o device=./mcl mcl
 ```
+
+It is recommended to use an absolute path for volume creation. We used 
+a relative path here just for brevity.
 
 This will create a Docker volume binded to `./mcl`. The directory will be 
 populated with the content of the image on the first run, and after that 
@@ -44,7 +47,7 @@ you can modify the content and it will reflect into the container.
 However, it is NOT recommended to edit these bind volumes wile the 
 application is running. None of these applications support hot reloading.
 
-To bind this volume into the image when running, use this command:
+To bind this volume into the image when running, use the `-v` argument:
 
 ```
 $ docker run -v mcl:/app/mcl dousha99/miraicle

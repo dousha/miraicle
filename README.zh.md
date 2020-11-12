@@ -36,8 +36,10 @@ $ docker-compose up -d && docker attach mirai
 我们目前的规划是将整个容器的应用层映射出来，即 `/app/mcl` 应该映射到主机。所以，首先我们需要创建一个本地卷：
 
 ```
-$ docker volume create -d local -o type=none,o=bind,device=./mcl mcl
+$ docker volume create -d local -o type=none -o o=bind -o device=./mcl mcl
 ```
+
+推荐使用绝对路径创建 Docker 卷。如果你不希望打一长串东西的话，可以把 `.` 替换为 `${PWD}`.
 
 这会在当前目录下创建 `mcl/` 并作为 `mcl` 卷。这个文件夹将在首次运行时把对应位置的文件映射出来，并将更改映射进容器。
 
@@ -96,7 +98,7 @@ HTTP 插件配置在 `/app/mcl/config/MiraiApiHttp/setting.yml`. （注意没有
 
 需要修改的部分是 `authKey` 以及其他对应的信息（比如 WebSocket 端口、上报信息等等）。如果你计划不修改 `authKey`, 那么请务必做好防火墙配置。
 
-注意到 `firewalld` 会影响 `docker` 和 `docker-compose` 的运行。你可能需要手动设置 `docker0` 和 `br-*` 到 `trusted` 区域。
+注意到 `firewalld` 会影响 `docker` 和 `docker-compose` 的运行。你可能需要手动设置 `docker0` 和 `br-*` 到 `trusted` 区域。或者让 Docker 使用主机网络运行。
 
 ## 常见问题
 
@@ -141,3 +143,4 @@ HTTP 插件配置在 `/app/mcl/config/MiraiApiHttp/setting.yml`. （注意没有
 ### 能不能帮我配置？
 
 可以。请转账付费。
+
