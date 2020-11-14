@@ -79,40 +79,45 @@ from another device with GUI), it is highly advised that one shall download
 `device.json` for the account. 
 
 Sharing the same `device.json` may lead to unexpected results including 
-the needing to re-authenticate, cannot login even permanently banned.
+need to re-authenticate, cannot login even permanently banned.
 
-To obtain your own copy of `device.json`, follow these steps:
+As the progress of `mirai-console`, it's now possible to authenticate with 
+help from other graphical terminals. You don't have to obtain a copy of 
+`device.json` in advance. If you are still interested in how to get such a 
+copy, read the quoted section below.
 
-* Install Git
-* Install Java 11+
-* Install Gradle because `mirai-console-loader` doesn't come with a wrapper (!)
-
-```
--- Clone and build the console loader
--- Have a cup of whatever you like while waiting. Stay hydrated.
-
-$ git clone https://github.com/iTXTech/mirai-console-loader.git
-$ cd mirai-console-loader
-$ gradle build
-$ cp build/libs/mirai-console-loader*.jar ./mcl.jar
-$ chmod +x mcl
-$ ./mcl
-
--- In the interactive console
-
-/login YOUR_USER_ID YOUR_PASSWORD
-
--- It would prompt you to authenticate the device
--- After the process, type the command below to close the app:
-
-/shutdown (or /stop in later versions. If none of these works, 
-press Ctrl + C).
-
--- The device.json will appear in the CWD
-```
-
-After obtaining your `device.json`, you can use it to replace 
-`config/device.json`.
+> To obtain your own copy of `device.json`, follow these steps:
+>
+> * Install Git
+> * Install Java 11+
+> * Install Gradle because `mirai-console-loader` doesn't come with a wrapper (!)
+> 
+> ```
+> -- Clone and build the console loader
+> -- Have a cup of whatever you like while waiting. Stay hydrated.
+> 
+> $ git clone https://github.com/iTXTech/mirai-console-loader.git
+> $ cd mirai-console-loader
+> $ gradle build
+> $ cp build/libs/mirai-console-loader*.jar ./mcl.jar
+> $ chmod +x mcl
+> $ ./mcl
+> 
+> -- In the interactive console
+>
+> /login YOUR_USER_ID YOUR_PASSWORD
+>
+> -- It would prompt you to authenticate the device
+> -- After the process, type the command below to close the app:
+>
+> /shutdown (or /stop in later versions. If none of these works, 
+> press Ctrl + C).
+>
+> -- The device.json will appear in the CWD
+> ```
+>
+> After obtaining your `device.json`, you can use it to replace 
+> `config/device.json`.
 
 Note that this does **NOT** create a universal device data. 
 New accounts logging in with this device data for the first time 
