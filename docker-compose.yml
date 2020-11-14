@@ -9,6 +9,9 @@ services:
       - '8080:8080'
     stdin_open: true
     tty: true
+    environment:
+      MIRAI_QQ: 123456789
+      MIRAI_PASSWORD: YOUR_SECRET_PASSWORD
 
 volumes:
   mcl:
