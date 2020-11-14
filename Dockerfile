@@ -24,7 +24,7 @@ RUN ./gradlew shadow \
 #COPY downloadHttpPlugin.sh .
 #RUN chmod +x ./downloadHttpPlugin.sh && ./downloadHttpPlugin.sh
 
-# -- Stage 2: Shipment
+# -- Stage 2: Install dependencies and Shipment
 FROM openjdk:11-slim AS production
 WORKDIR /app
 
@@ -42,6 +42,8 @@ EXPOSE 8080
 WORKDIR /app/mcl
 COPY start.sh .
 RUN chmod +x start.sh
+# Preconfigure
+RUN java -jar mcl.jar -u -z
 # Run the thing
 ENTRYPOINT [ "./start.sh" ]
 CMD [ "-u" ]
