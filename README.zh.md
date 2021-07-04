@@ -8,10 +8,10 @@
 
 ## 前置知识
 
-我将默认在 *nix 环境下进行操作。
+我将默认在 \*nix 环境下进行操作。
 Windows 也可以使用 Docker, 但是要更复杂一些。
 
-我将默认读者具备一定的 *nix 操作基础和 Docker 基础。
+我将默认读者具备一定的 \*nix 操作基础和 Docker 基础。
 
 ## 使用方法
 
@@ -46,7 +46,7 @@ $ docker volume create -d local -o type=none -o o=bind -o device=./mcl mcl
 现在，我们将该卷挂载到容器内：
 
 ```
-$ docker run -v mcl:/app/mcl dousha99/miraicle
+$ docker run -it -v mcl:/app/mcl dousha99/miraicle
 ```
 
 注意到程序本身并不支持热更新，所以任何更改都应在程序停止后进行。
@@ -57,40 +57,42 @@ $ docker run -v mcl:/app/mcl dousha99/miraicle
 
 ### 3. 设备数据
 
-你需要自行提供一份验证过的 `device.json`. 
-目前尚未测试在 `docker` 内能否正常启动验证过程，因为缺少图形环境，很有可能验证窗格不能打开。所以提前准备已经验证过的 `device.json` 有益身心健康。
+<del>你需要自行提供一份验证过的 `device.json`. 
+目前尚未测试在 `docker` 内能否正常启动验证过程，因为缺少图形环境，很有可能验证窗格不能打开。所以提前准备已经验证过的 `device.json` 有益身心健康。</del>
 
-获取 `device.json` 的方法如下：
+经过测试，可以在没有图形界面的情况下获取认证链接并借助其他有图形环境的设备完成验证。提前准备 `device.json` 已经不再必要。如果你希望了解如何准备 `device.json` 则阅读以下引用部分：
 
-* 安装 Git
-* 安装 Java 11+
-* 安装 Gradle
-
-```
--- 克隆并构建 mirai-console-loader
-
-$ git clone https://github.com/iTXTech/mirai-console-loader.git
-$ cd mirai-console-loader
-$ gradle build
-$ cp build/libs/mirai-console-loader*.jar ./mcl.jar
-$ chmod +x mcl
-$ ./mcl
-
--- 现在，进入了交互式终端
-
-/login 你的QQ 你的密码
-
--- 此时会提示设备验证
--- 验证完成之后
-
-/shutdown (或者 /stop 或者 Ctrl + C)
-```
-
-`device.json` 会在根目录下出现。
-
-你可能会意识到，自己刚刚不就启动了 `mirai` 了么？我要这镜像有何用？？
-
-或许是为了批量部署吧。
+> 获取 `device.json` 的方法如下：
+> 
+> * 安装 Git
+> * 安装 Java 11+
+> * 安装 Gradle
+> 
+> ```
+> -- 克隆并构建 mirai-console-loader
+> 
+> $ git clone https://github.com/iTXTech/mirai-console-loader.git
+> $ cd mirai-console-loader
+> $ gradle build
+> $ cp build/libs/mirai-console-loader*.jar ./mcl.jar
+> $ chmod +x mcl
+> $ ./mcl
+> 
+> -- 现在，进入了交互式终端
+> 
+> /login 你的QQ 你的密码
+> 
+> -- 此时会提示设备验证
+> -- 验证完成之后
+>
+> /shutdown (或者 /stop 或者 Ctrl + C)
+> ```
+>
+> `device.json` 会在根目录下出现。
+>
+> 你可能会意识到，自己刚刚不就启动了 `mirai` 了么？我要这镜像有何用？？
+>
+> 或许是为了批量部署吧。
 
 ### 4. HTTP 插件配置
 
@@ -98,7 +100,7 @@ HTTP 插件配置在 `/app/mcl/config/MiraiApiHttp/setting.yml`. （注意没有
 
 需要修改的部分是 `authKey` 以及其他对应的信息（比如 WebSocket 端口、上报信息等等）。如果你计划不修改 `authKey`, 那么请务必做好防火墙配置。
 
-注意到 `firewalld` 会影响 `docker` 和 `docker-compose` 的运行。你可能需要手动设置 `docker0` 和 `br-*` 到 `trusted` 区域。或者让 Docker 使用主机网络运行。
+注意到 `firewalld` 会影响 `docker` 和 `docker-compose` 的运行。你可能需要手动设置 `docker0` 和 `br-\*` 到 `trusted` 区域。或者让 Docker 使用主机网络运行。
 
 ## 常见问题
 
